@@ -35,23 +35,23 @@ create table utilisateur(
  );
 
  create table reservation(
-    date_debut date not null,
-    date_fin  date NOT NULL,
-   status ENUM('en attente','accepte','refuse') default 'en attente',
-    iduser int not NULL,
-    idVehicule int NOT NULL,
-    foreign key (iduser) references utilisateur(iduser),
-    foreign key (idVehicule) references vehicule(idVehicule),
-    primary key (iduser,idVehicule)
+      date_debut date not null,
+      date_fin  date NOT NULL,
+      status ENUM('en attente','accepte','refuse') default 'en attente',
+      iduser int not NULL,
+      idVehicule int NOT NULL,
+      foreign key (iduser) references utilisateur(iduser),
+      foreign key (idVehicule) references vehicule(idVehicule),
+      primary key (iduser,idVehicule)
  );
 
 CREATE TABLE avis (
-    idAvis INT AUTO_INCREMENT PRIMARY KEY,
-    commentaire TEXT NOT NULL,
-    note INT CHECK (note BETWEEN 1 AND 5), 
-    iduser INT NOT NULL,
-    idVehicule INT NOT NULL,
-    FOREIGN KEY (iduser, idVehicule) REFERENCES reservation(iduser, idVehicule)
+      idAvis INT AUTO_INCREMENT PRIMARY KEY,
+      commentaire TEXT NOT NULL,
+      note INT CHECK (note BETWEEN 1 AND 5), 
+      iduser INT NOT NULL,
+      idVehicule INT NOT NULL,
+      FOREIGN KEY (iduser, idVehicule) REFERENCES reservation(iduser, idVehicule)
 );
 ALTER TABLE vehicule ADD nom varchar(255)  ;
 
@@ -91,6 +91,61 @@ inner join utilisateur u
 on avi.iduser=u.iduser 
 
 
+-- vertion 2
+create table utilisateur(
+    iduser int primary key NOT NULL AUTO_INCREMENT,
+    nom varchar(20) NOT NULL,
+    Email varchar(20) not NULL unique,
+    telephone varchar(20) not null ,
+    date_Naissance date ,
+    gender Enum('male','Femme'),
+    password varchar(255) not null,
+    idrole int not NULL,
+    foreign key(idrole) references role(idrole)
+);
+CREATE TABLE Article (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titre VARCHAR(255),
+    contenu TEXT,
+    path_image varchar(255),
+    iduser INT,
+    idtag INT
+    FOREIGN KEY (iduser) REFERENCES utilisateur(iduser) ON DELETE CASCADE,
+    FOREIGN KEY (idtag) REFERENCES tag(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Favorie (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    iduser INT,
+    articleId INT,
+    dateAjout DATETIME,
+    FOREIGN KEY (iduser) REFERENCES utilisateur(iduser) ON DELETE CASCADE,
+    FOREIGN KEY (articleId) REFERENCES Article(id) ON DELETE CASCADE
+);
+
+create table commentaire(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    commentaire text NOT NULL,
+    clientId INT,
+     articleId INT,
+      FOREIGN KEY (clientId) REFERENCES utilisateur(iduser) ON DELETE CASCADE,
+    FOREIGN KEY (articleId) REFERENCES Article(id) ON DELETE CASCADE
+);
+
+create table tag(
+   id INT AUTO_INCREMENT PRIMARY KEY,
+   tag varchar(255)
+);
+create table tag_article(
+   idtag int NOT NULL,
+   id_article int NOT NULL,
+   FOREIGN KEY (idtag) REFERENCES tag(id) ON DELETE CASCADE,
+   FOREIGN KEY (id_article) REFERENCES Article(id) ON DELETE CASCADE
+);
+
+ALTER TABLE Article
+ADD idtag INT, -- Ajout de la colonne idtag
+ADD CONSTRAINT fk_idtag FOREIGN KEY (idtag) REFERENCES tag(id) ON DELETE CASCADE;
 
 
 

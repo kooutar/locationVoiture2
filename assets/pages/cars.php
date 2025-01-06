@@ -259,12 +259,13 @@ session_start();
                         <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
                             <li class=""><a href="">home</a></li>
                             <li class=""><a href="#service">service</a></li>
-                            <li class="active"><a href="#home">cars</a></li>
+                            <!-- <li class=""><a href="#home">cars</a></li> -->
                             <li class=""><a href="#featured-cars">featured cars</a></li>
                             <li><a href="">cars</a></li>
                             <?php 
                             if(isset($_SESSION['id_user'])){
                                 ?>
+                                 <li class=""><a href="articles.php">Articles</a></li>
                                 <li class=""><a href="myreservation.php">my reservation</a></li>
                                 <li class=""><a href="">Deconnexiion</a></li>
                          <?php 
