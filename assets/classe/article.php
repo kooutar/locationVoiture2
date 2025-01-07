@@ -38,8 +38,6 @@ class article{
         $stmt->bindParam(':parPage', $parPage, PDO::PARAM_INT);
         $stmt->bindParam(':idtheme',$idtheme);
         $stmt->execute();
-        
-       
         return $stmt->fetchAll();
       }
     function modifterArticle(){

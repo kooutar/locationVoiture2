@@ -18,6 +18,8 @@ try{
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css">
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
     <title>Document</title>
     <style>
         .vehicle-grid {
@@ -132,6 +134,27 @@ try{
 }
 
 
+.tag-item {
+    padding: 4px 12px;
+    background-color: #e5e7eb;
+    border-radius: 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tag-item:hover {
+    background-color: #4f46e5;
+    color: white;
+}
+
+.tag-item.selected {
+    background-color: #4f46e5;
+    color: white;
+}
+
+
+
     </style>
 </head>
 <body class="min-h-screen bg-gray-100">
@@ -181,18 +204,10 @@ try{
                         <input type="file" name="media" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     </div>
                     <div>
-                    <label  class="block text-sm font-medium text-gray-700" for="combobox">Choisissez ou entrez une valeur :</label>
-                            <input list="options" id="combobox" name="tagName"  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Choisissez ou entrez">
-                            <datalist id="options" >
-                           <?php
-                            $tags=$tag->getAlltag();
-                            foreach($tags as $tag){
-                                echo "<option data-id='{$tag['id']}'>{$tag['tag']}</option>";
-                            }
-                           ?>
-                            </datalist>
-                            <input type="hidden" id="tagId" name="tagId">
-                    </div>
+    <label class="block text-sm font-medium text-gray-700" for="combobox">Tags :</label>
+    <input id="combobox" name="tagName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Sélectionnez ou saisissez des tags">
+    <div id="existingTags" class="mt-2 flex flex-wrap gap-2"></div>
+</div>
                     <div class="flex justify-end space-x-3">
                         <button type="button" id="annulerBtn" class="bg-gray-200 px-4 py-2 rounded-md hover:bg-gray-300">
                             Annuler
@@ -241,7 +256,7 @@ try{
                    
                     
                 </div>
-                <form action="detaille.php" method="POST">
+                <form action="detailleARTICLE.php" method="POST">
                     <input type="hidden" name="idArticle" value="<?= $row['id'] ?>">
                     <button class="reserve-button">Voir plus</button>
                 </form>
@@ -283,60 +298,61 @@ try{
             articleForm.reset();
         });
 
-        // 
-        const combobox = document.getElementById("combobox");
-    const hiddenTagId = document.getElementById("tagId");
-    const options = document.getElementById("options").children;
+        const combobox = document.getElementById('combobox');
+const existingTags = document.getElementById('existingTags');
+let selectedTags = new Set();
 
-    // Écouter les modifications de l'utilisateur dans le champ
-    combobox.addEventListener("input", () => {
-        let selectedTagId = null;
-
-        // Parcourir les options pour trouver l'ID correspondant au texte
-        for (let option of options) {
-            if (option.value === combobox.value) {
-                selectedTagId = option.getAttribute("data-id");
-                break;
-            }
-        }
-
-        // Mettre à jour le champ caché avec l'ID
-        hiddenTagId.value = selectedTagId || "";
-    });
-
-        // Gérer la soumission du formulaire
-        // articleForm.addEventListener('submit', (e) => {
-        //     e.preventDefault();
+async function fetchTags() {
+    try {
+        const response = await fetch('../traitement/fetchTag.php');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        // const tags = await response.json();
+         const responseText = await response.text();
+        console.log('Réponse brute:', responseText); 
+        const tags = JSON.parse(responseText); 
+        // Vider le conteneur existant
+        existingTags.innerHTML = '';
+        
+        // Afficher chaque tag
+        tags.forEach(tag => {
+            const tagElement = document.createElement('div');
+            tagElement.className = 'tag-item';
+            tagElement.textContent = tag.tag;
+            tagElement.dataset.id = tag.id;
             
-        //     // Récupérer les valeurs du formulaire
-        //     const titre = document.getElementById('titre').value;
-        //     const description = document.getElementById('description').value;
-        //     const media = document.getElementById('media').value;
+            tagElement.onclick = () => {
+                if (selectedTags.has(tag.tag)) {
+                    selectedTags.delete(tag.tag);
+                    tagElement.classList.remove('selected');
+                } else {
+                    selectedTags.add(tag.tag);
+                    tagElement.classList.add('selected');
+                }
+                updateCombobox();
+            };
+            
+            existingTags.appendChild(tagElement);
+        });
+    } catch (error) {
+        console.error('Erreur lors de la récupération des tags:', error);
+    }
+}
 
-        //     // Créer un nouvel article
-        //     const articleElement = document.createElement('div');
-        //     articleElement.className = 'bg-white rounded-lg shadow-md p-6';
-        //     articleElement.innerHTML = `
-        //         <h2 class="text-xl font-bold mb-2">${titre}</h2>
-        //         <p class="text-gray-600 mb-4">${description}</p>
-        //         <p class="text-blue-600 font-bold">${media} €</p>
-        //     `;
+function updateCombobox() {
+    combobox.value = Array.from(selectedTags).join(', ');
+}
 
-        //     // Ajouter l'article au container
-        //     articlesContainer.appendChild(articleElement);
+// Charger les tags au chargement de la page
+document.addEventListener('DOMContentLoaded', fetchTags);
 
-        //     // Fermer la modale et réinitialiser le formulaire
-        //     modal.classList.add('hidden');
-        //     articleForm.reset();
-        // });
-
-        // Fermer la modale si on clique en dehors
-        // modal.addEventListener('click', (e) => {
-        //     if (e.target === modal) {
-        //         modal.classList.add('hidden');
-        //         articleForm.reset();
-        //     }
-        // });
+new Tagify(combobox, {
+  delimiters: ", ", // Sépare les tags avec des virgules
+  maxTags: 5,      // Nombre maximum de tags
+  blacklist: ["spam", "test"], // Interdit certains mots
+  dropdown: {
+    enabled: 0, // Affiche les suggestions dès qu'on tape
+  },
+});
     </script>
 </body>
 </html>

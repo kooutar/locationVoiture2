@@ -29,10 +29,10 @@ try {
             <!-- Image Gallery -->
             <?php
             if ($_SERVER['REQUEST_METHOD'] == "POST"):
-                $idvehicule = $_POST['idvehicule'];
-                $vehicule = new vehicule($db);
+                $idArticle = $_POST['idArticle'];
+                $article = new article($db);
 
-                $array = $vehicule->getVehiculeWithId($idvehicule);
+                $array = $vehicule->getVehiculeWithId($idArticle);
 
             ?>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
@@ -175,7 +175,6 @@ try {
                         </div>
                     </div>
 
-                    <!-- Description -->
                     <div class="mt-8">
                         <h2 class="text-xl font-semibold mb-4">Description</h2>
                         <p class="text-gray-600 leading-relaxed">
