@@ -47,6 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $idlastInsertTag = $db->lastInsertId();
                 if ($idlastInsertTag) {
                     $article->ajouterArticle($titre, $description, $finalPath, $iduser, $idlastInsertTag, $idtheme);
+                    header('location: ../pages/articles.php');
+                    exit();
                 } else {
                     echo "Erreur : ID du tag invalide.";
                 }
@@ -55,6 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         } else {
             $article->ajouterArticle($titre, $description, $finalPath, $iduser, $tagId, $idtheme);
+            header('location: ../pages/acticles.php');
+            exit();
         }
     }
 }

@@ -19,6 +19,120 @@ try{
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Document</title>
+    <style>
+        .vehicle-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .vehicle-card {
+            width: 300px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+
+        .vehicle-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .vehicle-details {
+            padding: 15px;
+        }
+
+        .vehicle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .vehicle-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .vehicle-price {
+            color: #4e4ffa;
+            font-weight: bold;
+        }
+
+        .tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+
+        .tag-active {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .tag-family {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .reserve-button {
+            width: 100%;
+            padding: 10px;
+            background: #4e4ffa;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .reserve-button:hover {
+            background: #3a3bc7;
+        }
+        .pagination {
+    display: flex;
+    justify-content: center; /* Centre les éléments */
+}
+
+.pagination ul {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+}
+
+.pagination li {
+    margin: 0 10px; /* Ajoute un espace de 10px entre chaque lien */
+}
+
+.pagination a {
+    text-decoration: none;
+    color: black; /* Couleur par défaut des liens */
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #f0f0f0; /* Couleur de fond au survol */
+}
+
+.pagination .active {
+    font-weight: bold;
+    color: blue; /* Couleur des liens actifs */
+}
+
+
+    </style>
 </head>
 <body class="min-h-screen bg-gray-100">
     <!-- Navbar -->
@@ -91,7 +205,58 @@ try{
             </div>
         </div>
     </div>
+    <!-- ************************************************************************************************ -->
+    <div class="vehicle-grid" id="vehicle-grid">
+    <?php
 
+    $article = new article($db);
+    $totalArticles = $article->getTotalArticles();
+
+    $nbrpages = ceil($totalArticles / 8);
+
+    $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+   
+    $articles = $article->Pagination($page);
+    
+    foreach ($articles as $row):
+      
+    ?>
+        <div class="vehicle-card">
+            <img src="<?= $row['path_image'] ?>" alt="" class="vehicle-image">
+            <div class="vehicle-details">
+                <div class="vehicle-header">
+                    <h2 class="vehicle-title"><?= $row['titre'] ?></h2>
+                    <!-- -->
+                </div>
+                <div class="tags">
+                   
+                    
+                </div>
+                <form action="detaille.php" method="POST">
+                    <input type="hidden" name="idvehicule" value="<?= $row['id'] ?>">
+                    <button class="reserve-button">Voir plus</button>
+                </form>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+
+<div class="w-full">
+    <div class="pagination">
+        <ul>
+            <?php
+    
+            for ($i = 1; $i <= $nbrpages; $i++) {
+
+                $activeClass = ($i == $page) ? 'class="active"' : '';
+                echo "<li><a href='?page=$i' $activeClass>$i</a></li>";
+            }
+            ?>
+        </ul>
+    </div>
+</div>
     <script>
         const modal = document.getElementById('articleModal');
         const ajoutBtn = document.getElementById('ajoutArticle');
