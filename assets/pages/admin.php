@@ -45,6 +45,9 @@ if(!isset($_SESSION['id_user']) || $_SESSION['idrole']!="admin"){
             <button onclick="showSection('addCategorie')" class="w-full text-left p-3 hover:bg-blue-700 rounded">
                 ➕ Ajouter Catégorie
             </button>
+            <button onclick="showSection('addTheme')" class="w-full text-left p-3 hover:bg-blue-700 rounded">
+                ➕ Ajouter theme
+            </button>
             <button onclick="showSection('reservations')" class="w-full text-left p-3 hover:bg-blue-700 rounded">
                 📋 Voir Réservations
             </button>
@@ -64,7 +67,7 @@ if(!isset($_SESSION['id_user']) || $_SESSION['idrole']!="admin"){
     <!-- Main Content -->
     <div class="ml-64 p-8">
         <!-- Add Vehicle Form -->
-        <div id="addVehicule" class="section hidden">
+        <div id="addVehicule" class="section ">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold">Ajouter des Véhicules</h2>
         <button type="button" onclick="addVehicleForm()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
@@ -141,6 +144,22 @@ if(!isset($_SESSION['id_user']) || $_SESSION['idrole']!="admin"){
                     </div>
                     <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
                         Ajouter la catégorie
+                    </button>
+                </div>
+            </form>
+        </div>
+
+         <div id="addTheme" class="section hidden">
+            <h2 class="text-2xl font-bold mb-6">Ajouter une Catégorie</h2>
+            <form class="max-w-lg bg-white p-6 rounded-lg shadow-md" action="../traitement/theme.php" method="POST">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Nom de la catégorie</label>
+                        <input type="text" name="theme" class="w-full p-2 border rounded" require>
+                    </div>
+                  
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+                        Ajouter theme
                     </button>
                 </div>
             </form>
@@ -413,7 +432,6 @@ foreach ($reservations as $reservation) {
         </form>
     </div>
 </div>
-<?php if (isset($_GET['status'])): ?>
 
     <script>
  
@@ -517,6 +535,7 @@ function updateFormNumbers() {
     formCount = document.querySelectorAll('.vehicle-entry').length;
 }
 
+<?php if (isset($_GET['status'])): ?>
 document.addEventListener('DOMContentLoaded', function() {
             let status = "<?php echo $_GET['status']; ?>";
 
@@ -563,8 +582,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
         });
-
+        <?php endif; ?>
     </script>
-    <?php endif; ?>
+    
 </body>
 </html>

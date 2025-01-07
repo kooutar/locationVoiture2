@@ -265,7 +265,7 @@ session_start();
                             <?php 
                             if(isset($_SESSION['id_user'])){
                                 ?>
-                                 <li class=""><a href="articles.php">Articles</a></li>
+                                 <li class=""><a href="themes.php">Articles</a></li>
                                 <li class=""><a href="myreservation.php">my reservation</a></li>
                                 <li class=""><a href="">Deconnexiion</a></li>
                          <?php 

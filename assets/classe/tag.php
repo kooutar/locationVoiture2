@@ -9,20 +9,14 @@ class tag{
         $stmt=$this->db->prepare("INSERT  into tag(tag) value (:tagname) ");
        return $stmt->execute(['tagname'=>$name]);
     }
-    function tagNameExist($tagName) :bool{
-        $stmt=$this->db->prepare("SELECT tag FROM tag where  tag=:tagname");
-         $result=$stmt->execute(['tagname'=>$tagName]);
-         if($result){
-            $results=$stmt->fetch();
-            if($results['tag']==$tagName)
-            {
-                return true;
-            }else{
-                return false;
-            }
-         }else
-          return false;
+    function tagNameExist($tagName): bool {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM tag WHERE tag = :tagname");
+        $stmt->execute(['tagname' => $tagName]);
+        $count = $stmt->fetchColumn(); // Récupère le nombre de lignes correspondant au tag
+    
+        return $count > 0; // Retourne true si une ou plusieurs lignes existent
     }
+    
     function getAlltag(){
         $stmt=$this->db->prepare("SELECT * from tag");
        $result= $stmt->execute();

@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../classe/db.php';
 require_once '../classe/article.php';
 require_once '../classe/tag.php';
@@ -50,7 +51,9 @@ try{
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div class="mt-3">
                 <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Ajouter un nouvel article</h3>
-                <form action="../traitement/ajoutArticle.php" method="POST" id="articleForm" class="space-y-4">
+                <form action="../traitement/ajoutArticle.php" method="POST" id="articleForm" class="space-y-4" enctype="multipart/form-data">
+                    <input type="hidden" name='idtheme' value="<?= $_GET['idtheme']?>">
+                    <input type="hidden" name="iduser" value="<?= $_SESSION['id_user']?>">
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Titre</label>
                         <input type="text" id="titre" name="titre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
@@ -61,19 +64,20 @@ try{
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Media</label>
-                        <input type="file" id="media" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <input type="file" name="media" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     </div>
                     <div>
                     <label  class="block text-sm font-medium text-gray-700" for="combobox">Choisissez ou entrez une valeur :</label>
-                            <input list="options" id="combobox" name="tag"  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Choisissez ou entrez">
+                            <input list="options" id="combobox" name="tagName"  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Choisissez ou entrez">
                             <datalist id="options" >
                            <?php
                             $tags=$tag->getAlltag();
                             foreach($tags as $tag){
-                                echo "<option id='{$tag['tag']}'>{$tag['tag']}</option>";
+                                echo "<option data-id='{$tag['id']}'>{$tag['tag']}</option>";
                             }
                            ?>
                             </datalist>
+                            <input type="hidden" id="tagId" name="tagId">
                     </div>
                     <div class="flex justify-end space-x-3">
                         <button type="button" id="annulerBtn" class="bg-gray-200 px-4 py-2 rounded-md hover:bg-gray-300">
@@ -104,6 +108,27 @@ try{
             modal.classList.add('hidden');
             articleForm.reset();
         });
+
+        // 
+        const combobox = document.getElementById("combobox");
+    const hiddenTagId = document.getElementById("tagId");
+    const options = document.getElementById("options").children;
+
+    // Écouter les modifications de l'utilisateur dans le champ
+    combobox.addEventListener("input", () => {
+        let selectedTagId = null;
+
+        // Parcourir les options pour trouver l'ID correspondant au texte
+        for (let option of options) {
+            if (option.value === combobox.value) {
+                selectedTagId = option.getAttribute("data-id");
+                break;
+            }
+        }
+
+        // Mettre à jour le champ caché avec l'ID
+        hiddenTagId.value = selectedTagId || "";
+    });
 
         // Gérer la soumission du formulaire
         // articleForm.addEventListener('submit', (e) => {

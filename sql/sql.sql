@@ -139,13 +139,23 @@ create table tag(
 create table tag_article(
    idtag int NOT NULL,
    id_article int NOT NULL,
+   idtheme int ,
    FOREIGN KEY (idtag) REFERENCES tag(id) ON DELETE CASCADE,
-   FOREIGN KEY (id_article) REFERENCES Article(id) ON DELETE CASCADE
+   FOREIGN KEY (id_article) REFERENCES Article(id) ON DELETE CASCADE,
+    FOREIGN KEY (idtheme) REFERENCES theme(idtheme) ON DELETE CASCADE
+);
+create table theme(
+   idtheme INT AUTO_INCREMENT PRIMARY KEY,
+   theme varchar(255)
 );
 
 ALTER TABLE Article
 ADD idtag INT, -- Ajout de la colonne idtag
 ADD CONSTRAINT fk_idtag FOREIGN KEY (idtag) REFERENCES tag(id) ON DELETE CASCADE;
 
+ALTER TABLE Article
+ADD idtheme int, 
+ADD CONSTRAINT fk_idtheme FOREIGN KEY (idtheme) REFERENCES theme(idtheme) ON DELETE CASCADE;
 
+DELETE from Article colume idtag
 
