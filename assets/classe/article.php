@@ -29,14 +29,14 @@ class article{
         return $result ? $result['totalArticles'] : 0;
       }
 
-      function Pagination($page) {
+      function Pagination($page,$idtheme) {
         $parPage = 8;
-        // $totalVehicules = $this->getTotalVehicules();
         $premier = ($page * $parPage) - $parPage;
-        $stmt = $this->db->prepare("SELECT * from  Article LIMIT :premier, :parPage");
+        $stmt = $this->db->prepare("SELECT * from  Article where idtheme=:idtheme LIMIT :premier, :parPage");
        
         $stmt->bindParam(':premier', $premier, PDO::PARAM_INT);
         $stmt->bindParam(':parPage', $parPage, PDO::PARAM_INT);
+        $stmt->bindParam(':idtheme',$idtheme);
         $stmt->execute();
         
        

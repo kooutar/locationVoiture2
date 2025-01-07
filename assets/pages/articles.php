@@ -214,10 +214,18 @@ try{
 
     $nbrpages = ceil($totalArticles / 8);
 
-    $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-
    
-    $articles = $article->Pagination($page);
+
+    if (isset($_GET['idtheme'])) {
+        $theme = intval($_GET['idtheme']); // Récupérer idtheme depuis l'URL
+    } else {
+        $theme = null; // Valeur par défaut si idtheme n'est pas défini
+    }
+   
+
+   $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+   $articles = $article->Pagination($page,$theme);
     
     foreach ($articles as $row):
       
@@ -234,7 +242,7 @@ try{
                     
                 </div>
                 <form action="detaille.php" method="POST">
-                    <input type="hidden" name="idvehicule" value="<?= $row['id'] ?>">
+                    <input type="hidden" name="idArticle" value="<?= $row['id'] ?>">
                     <button class="reserve-button">Voir plus</button>
                 </form>
             </div>
@@ -251,7 +259,8 @@ try{
             for ($i = 1; $i <= $nbrpages; $i++) {
 
                 $activeClass = ($i == $page) ? 'class="active"' : '';
-                echo "<li><a href='?page=$i' $activeClass>$i</a></li>";
+                // echo "<li><a href='?page=$i?idtheme=$theme' $activeClass>$i</a></li>";
+                echo '<li><a href="?page=' . $i . ($theme ? '&idtheme=' . $theme : '') . '">' . $i . '</a><li>';
             }
             ?>
         </ul>
