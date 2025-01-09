@@ -175,3 +175,6 @@ inner join tag_article a_t
 on t.id=a_t.idtag
 WHERE a_t.id_article=18;
 
+
+TRUNCATE TABLE tag_article;
+

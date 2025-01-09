@@ -22,7 +22,7 @@ class tag{
     }
 
     function getIDbyNamTag($tagName){
-        $stmt = $this->db->prepare("SELECT id from tag where  WHERE tag = :tagname ");
+        $stmt = $this->db->prepare("SELECT id from tag WHERE tag = :tagname ");
         
         if($stmt->execute(['tagname' => $tagName])){
             $id =$stmt->fetch();

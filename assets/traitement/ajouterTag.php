@@ -50,7 +50,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         }
         $article->ajouterArticle($titre, $description, $finalPath, $iduser, $idtheme);
         $idarticle=$db->lastInsertId();
-
         $tags = explode(',', $tagString);
         $allTagArticle=array();
         foreach ($tags as $tagFor) {
@@ -58,9 +57,15 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         }
        $tag_article = new tag_article($db);
         foreach($allTagArticle as $tagArray){
-            $tag->ajoutTag($tagArray);
-            $idtag=$db->lastInsertId();
-            $tag_article->ajouterTag_article($idarticle,$idtag);
+            if($tag->tagNameExist($tagArray)){
+                $id=$tag->getIDbyNamTag($tagArray);
+                $tag_article->ajouterTag_article($idarticle,$id);
+            }else{
+                $tag->ajoutTag($tagArray);
+                $idtag=$db->lastInsertId();
+                $tag_article->ajouterTag_article($idarticle,$idtag);
+            }
+           
         }
 
     }
