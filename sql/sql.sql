@@ -160,13 +160,14 @@ ADD CONSTRAINT fk_idtheme FOREIGN KEY (idtheme) REFERENCES theme(idtheme) ON DEL
 DELETE from Article colume idtag
 
 
-create view allArticle as 
+CREATE OR REPLACE view allArticle as 
 select a.* , t.tag
 from Article a 
 inner join tag_article a_t 
 on a.id= a_t.id_article
 inner join tag t 
 on a_t.idtag= t.id;
+group by (id);
 
 
 select t.tag
@@ -178,3 +179,17 @@ WHERE a_t.id_article=18;
 
 TRUNCATE TABLE tag_article;
 
+select a.*  
+from Article a
+inner join tag_article a_t 
+on a.id= a_t.id_article
+inner join tag t 
+on a_t.idtag= t.id;
+
+
+select t.tag
+from tag t
+inner join tag_article a_t
+on a_t.idtag= t.id;
+
+: Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a_t.id' in 'where clause' in C:\xampp\htdocs\locationVoiture2\assets\classe\tag_article.php:23 Stack trace: #0 C:\xampp\htdocs\locationVoiture2\assets\classe\tag_article.php(23): PDOStatement->execute(Array) #1 C:\xampp\htdocs\locationVoiture2\assets\pages\articles.php(257): tag_article->afficheTag_

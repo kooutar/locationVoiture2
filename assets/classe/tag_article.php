@@ -14,6 +14,22 @@ class tag_article{
             'id_article'=>$idArticle]);
     }
 
+    function afficheTag_article($idarticle){
+        $stmt=$this->db->prepare("select t.tag
+                            from tag t
+                            inner join tag_article a_t
+                            on a_t.idtag= t.id 
+                            where a_t.id_article =:idarticle");
+        if($stmt->execute(['idarticle'=>$idarticle])){
+           return $stmt->fetchAll();
+        }else{
+            return [];
+        }
+
+        
+        
+    }
+
     
 
 }

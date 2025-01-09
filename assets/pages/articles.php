@@ -3,6 +3,7 @@ session_start();
 require_once '../classe/db.php';
 require_once '../classe/article.php';
 require_once '../classe/tag.php';
+require_once '../classe/tag_article.php';
 try{
 
     $database = new Database();
@@ -225,6 +226,8 @@ try{
     <?php
 
     $article = new article($db);
+    $article_tag= new tag_article($db);
+
     $totalArticles = $article->getTotalArticles();
 
     $nbrpages = ceil($totalArticles / 4);
@@ -250,7 +253,17 @@ try{
             <div class="vehicle-details">
                 <div class="vehicle-header">
                     <h2 class="vehicle-title"><?= $row['titre'] ?></h2>
-                    <!-- -->
+                     <?php 
+                       $alltag=$article_tag->afficheTag_article($row['id']);
+                       foreach($alltag as $tag){
+                         ?>
+                         <div class="tags">
+                    <span class="tag tag-active"><?= $tag['tag'] ?></span>
+                    
+                </div>
+                     <?php
+                       }
+                     ?>
                 </div>
                 <div class="tags">
                    
