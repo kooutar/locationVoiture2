@@ -1,8 +1,10 @@
 <?php
+
 session_start();
 require_once '../classe/db.php';
 require_once '../classe/article.php';
 require_once '../classe/tag.php';
+require_once '../classe/tag_article.php';
 try {
 
     $database = new Database();
@@ -12,7 +14,8 @@ try {
 } catch (PDOException $e) {
     $e->getMessage();
 }
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+if($_SERVER['REQUEST_METHOD']=='POST'){
     $titre = htmlspecialchars(trim($_POST['titre']));
     $description = htmlspecialchars(trim($_POST['description']));
     // $idtag=htmlspecialchars(trim($_POST['tag']));
@@ -30,9 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $finalPath = null;
    
     if (!empty($titre) && !empty($titre) && (!empty($tagName)) && isset($_FILES['media']['name']) && !empty($_FILES['media']['name'])) {
-        $tags = explode(',', $tagString);
-        $result=[];
-        // var_dump($tags);
+   
         $dir = '../uplods/';
         $path = basename($_FILES['media']['name']);
         $finalPath = $dir . uniqid() . "_" . $path;
@@ -47,35 +48,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             echo "Extension non autorisée pour le fichier : " . $_FILES['media']['name'];
         }
+        $article->ajouterArticle($titre, $description, $finalPath, $iduser, $idtheme);
+        $idarticle=$db->lastInsertId();
+
+        $tags = explode(',', $tagString);
+        $allTagArticle=array();
         foreach ($tags as $tagFor) {
-            //  echo $tagFor;
-            if ($tag->tagNameExist(strtolower($tagFor)) == false) {
-                  
-                $result = $tag->ajoutTag($tagFor);
-                if ($result) {
-                    // echo "ajout avec succes";
-                    $idlastInsertTag = $db->lastInsertId();
-                    if ($idlastInsertTag) {
-                        $article->ajouterArticle($titre, $description, $finalPath, $iduser, $idtheme);
-                        // header('location: ../pages/articles.php');
-                        // exit();
-                    } else {
-                        echo "Erreur : ID du tag invalide.";
-                    }
-                } else {
-                    echo "err lors de insertion";
-                }
-            } else {
-                $idTag=$tag->getIDbyNamTag($tagFor);
-                $article->ajouterArticle($titre, $description, $finalPath, $iduser, $idtheme);
-                // header('location: ../pages/acticles.php');
-                // exit();
-            }
-            // $tag = trim($tag); // Supprime les espaces inutiles
-            // if (!empty($tag)) {
-            //     $stmt->execute(['tag_name' => $tag]);
-            // }
+            array_push( $allTagArticle,$tagFor);
         }
-        
+       $tag_article = new tag_article($db);
+        foreach($allTagArticle as $tagArray){
+            $tag->ajoutTag($tagArray);
+            $idtag=$db->lastInsertId();
+            $tag_article->ajouterTag_article($idarticle,$idtag);
+        }
+
     }
 }

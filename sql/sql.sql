@@ -159,3 +159,19 @@ ADD CONSTRAINT fk_idtheme FOREIGN KEY (idtheme) REFERENCES theme(idtheme) ON DEL
 
 DELETE from Article colume idtag
 
+
+create view allArticle as 
+select a.* , t.tag
+from Article a 
+inner join tag_article a_t 
+on a.id= a_t.id_article
+inner join tag t 
+on a_t.idtag= t.id;
+
+
+select t.tag
+from tag t
+inner join tag_article a_t
+on t.id=a_t.idtag
+WHERE a_t.id_article=18;
+

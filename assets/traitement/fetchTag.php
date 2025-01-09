@@ -8,6 +8,7 @@ try {
     $database = new Database();
     $db = $database->connect();
     $tag = new tag($db);
+    
     $tags = $tag->getAlltag();
     if ($tags) {
         echo json_encode($tags);

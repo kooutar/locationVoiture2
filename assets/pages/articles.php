@@ -188,7 +188,7 @@ try{
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div class="mt-3">
                 <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Ajouter un nouvel article</h3>
-                <form action="../traitement/ajoutArticle.php" method="POST" id="articleForm" class="space-y-4" enctype="multipart/form-data">
+                <form action="../traitement/ajouterTag.php" method="POST" id="articleForm" class="space-y-4" enctype="multipart/form-data">
                     <input type="hidden" name='idtheme' value="<?= $_GET['idtheme']?>">
                     <input type="hidden" name="iduser" value="<?= $_SESSION['id_user']?>">
                     <div>
@@ -203,11 +203,11 @@ try{
                         <label class="block text-sm font-medium text-gray-700">Media</label>
                         <input type="file" name="media" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     </div>
-                    <div>
-    <label class="block text-sm font-medium text-gray-700" for="combobox">Tags :</label>
-    <input id="combobox" name="tagName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Sélectionnez ou saisissez des tags">
-    <div id="existingTags" class="mt-2 flex flex-wrap gap-2"></div>
-</div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700" for="combobox">Tags :</label>
+                    <input id="combobox" name="tagName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Sélectionnez ou saisissez des tags">
+                    <div id="existingTags" class="mt-2 flex flex-wrap gap-2"></div>
+                </div>
                     <div class="flex justify-end space-x-3">
                         <button type="button" id="annulerBtn" class="bg-gray-200 px-4 py-2 rounded-md hover:bg-gray-300">
                             Annuler
@@ -227,7 +227,7 @@ try{
     $article = new article($db);
     $totalArticles = $article->getTotalArticles();
 
-    $nbrpages = ceil($totalArticles / 8);
+    $nbrpages = ceil($totalArticles / 4);
 
    
 
@@ -306,30 +306,34 @@ async function fetchTags() {
     try {
         const response = await fetch('../traitement/fetchTag.php');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        // const tags = await response.json();
          const responseText = await response.text();
-        console.log('Réponse brute:', responseText); 
-        const tags = JSON.parse(responseText); 
-        // Vider le conteneur existant
+         console.log(responseText);
+        const tags = JSON.parse(responseText); //t$responseText TO objet
         existingTags.innerHTML = '';
         
         // Afficher chaque tag
-        tags.forEach(tag => {
+        tags.forEach(tagFor => {
             const tagElement = document.createElement('div');
             tagElement.className = 'tag-item';
-            tagElement.textContent = tag.tag;
-            tagElement.dataset.id = tag.id;
+            tagElement.textContent = tagFor.tag;
+            console.log(tagFor.tag);
+            tagElement.dataset.id = tagFor.id;
+            console.log("id",tagFor.id)
             
             tagElement.onclick = () => {
-                if (selectedTags.has(tag.tag)) {
-                    selectedTags.delete(tag.tag);
+                // console.log(tagFor.tag);
+                if (selectedTags.has(tagFor.tag)) {
+                    selectedTags.delete(tagFor.tag);
                     tagElement.classList.remove('selected');
                 } else {
-                    selectedTags.add(tag.tag);
+                    selectedTags.add(tagFor.tag);
                     tagElement.classList.add('selected');
                 }
                 updateCombobox();
             };
+            combobox.addEventListener('input', ()=>{
+                    
+            })
             
             existingTags.appendChild(tagElement);
         });
@@ -339,7 +343,9 @@ async function fetchTags() {
 }
 
 function updateCombobox() {
-    combobox.value = Array.from(selectedTags).join(', ');
+   
+    combobox.value = Array.from(selectedTags ).join(', ');
+    // console.log(combobox.value);
 }
 
 // Charger les tags au chargement de la page
@@ -348,10 +354,7 @@ document.addEventListener('DOMContentLoaded', fetchTags);
 new Tagify(combobox, {
   delimiters: ", ", // Sépare les tags avec des virgules
   maxTags: 5,      // Nombre maximum de tags
-  blacklist: ["spam", "test"], // Interdit certains mots
-  dropdown: {
-    enabled: 0, // Affiche les suggestions dès qu'on tape
-  },
+  
 });
     </script>
 </body>
