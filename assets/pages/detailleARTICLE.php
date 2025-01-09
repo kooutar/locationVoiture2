@@ -79,7 +79,7 @@ try {
                     <?= nl2br($article['contenu']) ?>
                 </p>
             </div>
-  <?php }?>
+  
 
   <div class="max-w-4xl mx-auto p-4 mt-8 bg-white rounded-xl shadow">
     <!-- Formulaire nouveau commentaire -->
@@ -98,7 +98,7 @@ try {
     <div class="space-y-6">
     <?php
                     $commentaire= new commentaire($db);
-                    $commentaires=$commentaire->getALLcommentaire();
+                    $commentaires=$commentaire->getALLcommentaire($article['id']);
                     foreach($commentaires as $comm){
                     ?>
         <div class="flex space-x-4 p-4 border rounded-lg">
@@ -125,6 +125,7 @@ try {
         
     </div>
 </div>
+<?php }?>
             <!-- Actions -->
             <div class="flex justify-between items-center mt-8 pt-6 border-t">
                 

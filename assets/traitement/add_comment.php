@@ -16,7 +16,7 @@ try {
     $iduser=$_SESSION['id_user'];
     $comment=new commentaire($db);
     $comment->ajoutCommentaire($commentaire,$iduser, $idArticle);
-    header('location: ../pages/articles.php');
+    header('location: ../pages/themes.php');
     exit();
 
  }

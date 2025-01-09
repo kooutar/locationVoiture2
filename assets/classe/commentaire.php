@@ -18,13 +18,13 @@
         $this->commentaire=$commentaire;
         $this->idcommentaire=$this->db->lastInsertId();
      }
-      function getALLcommentaire(){
-        $stmt=$this->db->prepare("SELECT * from commentaire");
-        if($stmt->execute()){
+      function getALLcommentaire($articleId){
+        $stmt=$this->db->prepare("SELECT * from commentaire where articleId=?");
+        if($stmt->execute([$articleId])){
             return $stmt->fetchAll();
         }else return [];
       }
-      
+
      function __get($name)
      {
         return $this->$name;

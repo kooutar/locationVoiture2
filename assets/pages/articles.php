@@ -4,6 +4,7 @@ require_once '../classe/db.php';
 require_once '../classe/article.php';
 require_once '../classe/tag.php';
 require_once '../classe/tag_article.php';
+require_once '../classe/favorie.php';
 try{
 
     $database = new Database();
@@ -252,17 +253,19 @@ try{
    $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 
    $articles = $article->Pagination($page,$theme);
-    
+   $favorie= new favorie($db);
     foreach ($articles as $row):
-      
+        $isFavorite= $favorie->estFavori($row['id'],$_SESSION['id_user'])
     ?>
-        <div class="vehicle-card relative">
-    <div class="absolute top-4 right-4 z-10">
-        <button onclick="toggleFavorite(this, <?= $row['id'] ?>)" class="favorite-btn">
-            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-        </button>
+        <div class="vehicle-card ">
+    <div class=" top-4 right-4 z-10">
+    <button onclick="toggleFavorite(this, <?= $row['id'] ?>)" 
+        class="favorite-btn <?= $isFavorite ? 'active' : '' ?>">
+    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+    </svg>
+</button>
     </div>
     <img src="<?= $row['path_image'] ?>" alt="" class="vehicle-image">
     <div class="vehicle-details">
@@ -304,7 +307,21 @@ try{
 </div>
     <script>
         function toggleFavorite(btn, articleId) {
-            btn.classList.toggle('active');}
+            btn.classList.toggle('active');
+            fetch('../traitement/add_favorite.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ article_id: articleId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            btn.classList.toggle('active', data.isFavorite);
+        }
+    });
+        }
         const modal = document.getElementById('articleModal');
         const ajoutBtn = document.getElementById('ajoutArticle');
         const annulerBtn = document.getElementById('annulerBtn');
