@@ -192,4 +192,16 @@ from tag t
 inner join tag_article a_t
 on a_t.idtag= t.id;
 
-: Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a_t.id' in 'where clause' in C:\xampp\htdocs\locationVoiture2\assets\classe\tag_article.php:23 Stack trace: #0 C:\xampp\htdocs\locationVoiture2\assets\classe\tag_article.php(23): PDOStatement->execute(Array) #1 C:\xampp\htdocs\locationVoiture2\assets\pages\articles.php(257): tag_article->afficheTag_
+
+Warning
+: Undefined variable $alltag in
+C:\xampp\htdocs\locationVoiture2\assets\pages\articles.php
+on line
+264
+
+
+Warning
+: foreach() argument must be of type array|object, null given in
+C:\xampp\htdocs\locationVoiture2\assets\pages\articles.php
+on line
+264

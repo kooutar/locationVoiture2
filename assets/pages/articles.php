@@ -153,7 +153,15 @@ try{
     background-color: #4f46e5;
     color: white;
 }
+.favorite-btn svg {
+    transition: all 0.3s;
+    color: #9ca3af;
+}
 
+.favorite-btn.active svg {
+    fill: #ef4444;
+    color: #ef4444;
+}
 
 
     </style>
@@ -248,33 +256,33 @@ try{
     foreach ($articles as $row):
       
     ?>
-        <div class="vehicle-card">
-            <img src="<?= $row['path_image'] ?>" alt="" class="vehicle-image">
-            <div class="vehicle-details">
-                <div class="vehicle-header">
-                    <h2 class="vehicle-title"><?= $row['titre'] ?></h2>
-                     <?php 
-                       $alltag=$article_tag->afficheTag_article($row['id']);
-                       foreach($alltag as $tag){
-                         ?>
-                         <div class="tags">
+        <div class="vehicle-card relative">
+    <div class="absolute top-4 right-4 z-10">
+        <button onclick="toggleFavorite(this, <?= $row['id'] ?>)" class="favorite-btn">
+            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+        </button>
+    </div>
+    <img src="<?= $row['path_image'] ?>" alt="" class="vehicle-image">
+    <div class="vehicle-details">
+        <div class="vehicle-header">
+            <h2 class="vehicle-title"><?= $row['titre'] ?></h2>
+            <div class="tags">
+              
+                <?php 
+                  $alltag=$article_tag->afficheTag_article($row['id']);
+                foreach($alltag as $tag): ?>
                     <span class="tag tag-active"><?= $tag['tag'] ?></span>
-                    
-                </div>
-                     <?php
-                       }
-                     ?>
-                </div>
-                <div class="tags">
-                   
-                    
-                </div>
-                <form action="detailleARTICLE.php" method="POST">
-                    <input type="hidden" name="idArticle" value="<?= $row['id'] ?>">
-                    <button class="reserve-button">Voir plus</button>
-                </form>
+                <?php endforeach; ?>
             </div>
         </div>
+        <form action="detailleARTICLE.php" method="POST" class="mt-4">
+            <input type="hidden" name="idArticle" value="<?= $row['id'] ?>">
+            <button class="reserve-button">Voir plus</button>
+        </form>
+    </div>
+</div>
     <?php endforeach; ?>
 </div>
 
@@ -295,6 +303,8 @@ try{
     </div>
 </div>
     <script>
+        function toggleFavorite(btn, articleId) {
+            btn.classList.toggle('active');}
         const modal = document.getElementById('articleModal');
         const ajoutBtn = document.getElementById('ajoutArticle');
         const annulerBtn = document.getElementById('annulerBtn');

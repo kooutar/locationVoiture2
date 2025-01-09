@@ -46,10 +46,14 @@ class article{
         return $stmt->fetchAll();
       }
 
-      function getTagArticle($idarticle){
-        $stmt=$this->db->prepare("SELECT tag");
-      }
-      function getIDArticle(){return $this->idarticle;}
+       function getarticlebyId($idarticle){
+         $stmt=$this->db->prepare("select * from article where id=:idarticle");
+         if($stmt->execute(['idarticle'=>$idarticle])){
+            return $stmt->fetchAll();
+         }else return [];
+       }
+       
+    function getIDArticle(){return $this->idarticle;}
     function modifterArticle(){
 
     }
