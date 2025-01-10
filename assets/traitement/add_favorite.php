@@ -12,10 +12,14 @@ try {
     $database = new Database();
     $db = $database->connect();
     $favorie= new favorie($db);
-$favorie->ajoutFavorie($article_id,$user_id);
+   
     if($favorie->estFavori($article_id,$user_id)){
-        echo json_encode(['success' => true, 'isFavorite' => false]);
+        $favorie->removeFavorie($article_id,$user_id);
+            echo json_encode(['success' => true, 'isFavorite' => false]);
+        
+       
     }else{
+        $favorie->ajoutFavorie($article_id,$user_id);
         echo json_encode(['success' => true, 'isFavorite' => true]);
         
     }

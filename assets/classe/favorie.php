@@ -27,6 +27,11 @@ class favorie{
         }
 
     }
+    function removeFavorie($idarticle,$user_id){
+      $stmt=$this->db->prepare("delete from Favorie where articleId = ? AND iduser = ? ");
+      $stmt->execute([$idarticle, $user_id]);
+
+    }
 
 }
 

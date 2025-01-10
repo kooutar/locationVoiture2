@@ -239,7 +239,7 @@ try{
 
     $totalArticles = $article->getTotalArticles();
 
-    $nbrpages = ceil($totalArticles / 2);
+    $nbrpages = ceil($totalArticles / 4);
 
    
 
@@ -304,7 +304,7 @@ try{
 </div>
     <script>
         function toggleFavorite(btn, articleId) {
-            btn.classList.toggle('active');
+            // btn.classList.toggle('active');
             fetch('../traitement/add_favorite.php', {
         method: 'POST',
         headers: {

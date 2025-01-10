@@ -33,7 +33,7 @@ class article{
       }
 
       function Pagination($page,$idtheme) {
-        $parPage = 2;
+        $parPage = 4;
         $premier = ($page * $parPage) - $parPage;
         $stmt = $this->db->prepare("select * from Article
                                       where idtheme=:idtheme 
