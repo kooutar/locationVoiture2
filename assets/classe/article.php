@@ -25,6 +25,18 @@ class article{
 
         $this->idarticle=$this->db->lastInsertId();
     }
+
+    function getAllarticles(){
+      $stmt=$this->db->prepare("SELECT * FROM Article");
+      if($stmt->execute()){
+        return $stmt->fetchAll();
+      }else return [];
+    }
+    function updateReservation($status,$idarticle){
+      $stmt=$this->db->prepare("UPDATE  Article set status = ? where id=?");
+       $stmt->execute([$status,$idarticle]);
+    }
+
     function getTotalArticles() {
         $stmt = $this->db->prepare("SELECT COUNT(*) as totalArticles FROM Article");
         $stmt->execute();

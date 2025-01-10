@@ -192,16 +192,5 @@ from tag t
 inner join tag_article a_t
 on a_t.idtag= t.id;
 
-
-Warning
-: Undefined variable $alltag in
-C:\xampp\htdocs\locationVoiture2\assets\pages\articles.php
-on line
-264
-
-
-Warning
-: foreach() argument must be of type array|object, null given in
-C:\xampp\htdocs\locationVoiture2\assets\pages\articles.php
-on line
-264
+Alter table Article
+add column status enum ('en attente', 'acceptee', 'refusee')  default 'en attente'

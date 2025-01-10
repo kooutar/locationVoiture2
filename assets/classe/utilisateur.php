@@ -67,6 +67,11 @@ abstract class Utilisateur {
               'password' => password_hash($data['password'], PASSWORD_DEFAULT),
               'role' =>  $idrole
           ]);
+          $this->nom=$data['nom'];
+          $this->email=$data['email'];
+          $this->password=password_hash($data['password'], PASSWORD_DEFAULT);
+          $this->telephone=$data['telephone'];
+          $this->dateNaissance=$data['date_Naissance'];
       } catch (PDOException $e) {
           throw new Exception("Erreur d'inscription : " . $e->getMessage());
       }

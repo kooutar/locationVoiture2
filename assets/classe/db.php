@@ -9,6 +9,9 @@ class Database implements DatabaseConnectionInterface {
     private string $dbname = "Drive";
     private string $username = "root";
     private string $password = "";
+    private static Database $instance;
+    private $connection;
+
 
     public function connect(): PDO {
         try {
@@ -20,6 +23,13 @@ class Database implements DatabaseConnectionInterface {
         } catch (PDOException $e) {
             throw new Exception("Erreur de connexion : " . $e->getMessage());
         }
+    }
+
+    public static function getInstance() {
+        if (!self::$instance) {
+            self::$instance = new Database();
+        }
+        return self::$instance;
     }
 }
 

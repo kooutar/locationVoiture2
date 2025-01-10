@@ -1,4 +1,3 @@
-
 <?php 
 session_start();
 if(!isset($_SESSION['id_user']) || $_SESSION['idrole']!="admin"){
@@ -12,12 +11,15 @@ if(!isset($_SESSION['id_user']) || $_SESSION['idrole']!="admin"){
     require_once '../classe/vehicule.php';
     require_once '../classe/admin.php';
     require_once '../classe/reservation.php';
+    require_once '../classe/article.php';
     try{
        $database = new Database();
        $db=$database->connect();
        $reservation = new reservation($db);
     }catch(PDOException $e){$e->getMessage();}
     $admin =new admin($db); 
+    $article =new article($db);
+    $articles=$article->getAllarticles();
 
 ?>
 
@@ -50,6 +52,9 @@ if(!isset($_SESSION['id_user']) || $_SESSION['idrole']!="admin"){
             </button>
             <button onclick="showSection('reservations')" class="w-full text-left p-3 hover:bg-blue-700 rounded">
                 📋 Voir Réservations
+            </button>
+            <button onclick="showSection('Article')" class="w-full text-left p-3 hover:bg-blue-700 rounded">
+                📋 Voir Articles
             </button>
             <button onclick="showSection('vehicules')" class="w-full text-left p-3 hover:bg-blue-700 rounded">
                 🚗 Tous les Véhicules
@@ -219,7 +224,61 @@ foreach ($reservations as $reservation) {
                     </tbody>
                 </table>
             </div>
-        </div>
+</div>
+
+<!-- articles -->
+
+<div id="Article" class="section hidden">
+<h2 class="text-2xl font-bold mb-6">Articles</h2>
+<div class="bg-white rounded-lg shadow-md overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left">Titre</th>
+                            <th class="px-6 py-3 text-left">Auteur</th>
+                            <th class="px-6 py-3 text-left">theme</th>
+                            <th class="px-6 py-3 text-left">contenu</th>
+                            <th class="px-6 py-3 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        //   $article =new article($db);
+                        //   $articles=$article->getAllarticles();
+                          foreach($articles as $article){
+                        ?>
+                        <tr>
+        <td class="px-6 py-4"><?= $article['titre'] ?></td>
+        <td class="px-6 py-4"><?= $article['iduser'] ?></td>
+        <td class="px-6 py-4"><?= $article['idtheme'] ?></td>
+        <td class="px-6 py-4"><?= $article['contenu'] ?></td>
+        <td class="px-6 py-4"><?= $article['status'] ?></td>
+        <td class="px-6 py-4 space-x-2">
+            <form action="../traitement/updatearticle.php" method="POST" style="display:inline;">
+                <input type="hidden" name="iduser" value="<?= $article['iduser'] ?>">
+                <input type="hidden" name="idarticle" value="<?= $article['id'] ?>">
+                <input type="hidden" name="status" value="acceptee">
+                <button type="submit" name="Accepter" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
+                    Accepter
+                </button>
+            </form>
+            <form action="../traitement/updatearticle.php" method="POST" style="display:inline;">
+                <input type="hidden" name="iduser" value="<?= $article['iduser'] ?>">
+                <input type="hidden" name="idarticle" value="<?= $article['id'] ?>">
+                <input type="hidden" name="status" value="refusee">
+                <button type="submit" name="Refuser" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                    Refuser
+                </button>
+            </form>
+        </td>
+    </tr>
+                        <?php    
+                          }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+</div>
 
         <!-- Vehicles Table -->
         <div id="vehicules" class="section hidden">
