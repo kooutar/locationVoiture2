@@ -239,7 +239,7 @@ try{
 
     $totalArticles = $article->getTotalArticles();
 
-    $nbrpages = ceil($totalArticles / 4);
+    $nbrpages = ceil($totalArticles / 2);
 
    
 
@@ -257,8 +257,8 @@ try{
     foreach ($articles as $row):
         $isFavorite= $favorie->estFavori($row['id'],$_SESSION['id_user'])
     ?>
-        <div class="vehicle-card ">
-    <div class=" top-4 right-4 z-10">
+       <div class="vehicle-card ">
+     <div class=" top-4 right-4 z-10">
     <button onclick="toggleFavorite(this, <?= $row['id'] ?>)" 
         class="favorite-btn <?= $isFavorite ? 'active' : '' ?>">
     <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -273,11 +273,9 @@ try{
             <h2 class="vehicle-title"><?= $row['titre'] ?></h2>
             <div class="tags">
               
-                <?php 
-                  $alltag=$article_tag->afficheTag_article($row['id']);
-                foreach($alltag as $tag): ?>
-                    <span class="tag tag-active"><?= $tag['tag'] ?></span>
-                <?php endforeach; ?>
+                
+                    
+                
             </div>
         </div>
         <form action="detailleARTICLE.php" method="POST" class="mt-4">
@@ -295,12 +293,11 @@ try{
         <ul>
             <?php
     
-            for ($i = 1; $i <= $nbrpages; $i++) {
-
-                $activeClass = ($i == $page) ? 'class="active"' : '';
-                // echo "<li><a href='?page=$i?idtheme=$theme' $activeClass>$i</a></li>";
-                echo '<li><a href="?page=' . $i . ($theme ? '&idtheme=' . $theme : '') . '">' . $i . '</a><li>';
-            }
+    for ($i = 1; $i <= $nbrpages; $i++) {
+        $activeClass = ($i == $page) ? 'class="active"' : '';
+        echo '<li><a href="?page=' . $i . ($theme ? '&idtheme=' . $theme : '') . '" ' . $activeClass . '>' . $i . '</a></li>';
+    }
+    
             ?>
         </ul>
     </div>
@@ -338,7 +335,7 @@ try{
             articleForm.reset();
         });
 
-        const combobox = document.getElementById('combobox');
+const combobox = document.getElementById('combobox');
 const existingTags = document.getElementById('existingTags');
 let selectedTags = new Set();
 

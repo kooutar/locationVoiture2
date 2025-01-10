@@ -26,14 +26,14 @@ class article{
         $this->idarticle=$this->db->lastInsertId();
     }
     function getTotalArticles() {
-        $stmt = $this->db->prepare("SELECT COUNT(*) as totalArticles FROM allArticle");
+        $stmt = $this->db->prepare("SELECT COUNT(*) as totalArticles FROM Article");
         $stmt->execute();
         $result = $stmt->fetch();
         return $result ? $result['totalArticles'] : 0;
       }
 
       function Pagination($page,$idtheme) {
-        $parPage = 4;
+        $parPage = 2;
         $premier = ($page * $parPage) - $parPage;
         $stmt = $this->db->prepare("select * from Article
                                       where idtheme=:idtheme 
